@@ -1,0 +1,33 @@
+{
+  "name": "collabify-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for Collabify document storage on Base L2",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:base": "hardhat run scripts/deploy.js --network base",
+    "deploy:base-sepolia": "hardhat run scripts/deploy.js --network baseSepolia",
+    "verify": "hardhat verify --network base",
+    "clean": "hardhat clean"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "base",
+    "l2",
+    "ipfs",
+    "documents"
+  ],
+  "author": "Collabify Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0",
+    "dotenv": "^16.3.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}

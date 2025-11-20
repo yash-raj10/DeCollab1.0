@@ -1,0 +1,42 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "type-check": "tsc --noEmit",
+    "build:production": "NODE_ENV=production next build",
+    "preview": "next build && next start"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.896.0",
+    "@excalidraw/excalidraw": "^0.18.0",
+    "@supabase/supabase-js": "^2.58.0",
+    "@tiptap/extension-color": "^3.10.5",
+    "@tiptap/extension-text-align": "^3.10.5",
+    "@tiptap/extension-text-style": "^3.10.5",
+    "@tiptap/extension-underline": "^3.10.5",
+    "@tiptap/react": "^3.10.5",
+    "@tiptap/starter-kit": "^3.10.5",
+    "ethers": "^6.15.0",
+    "next": "15.3.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "web3": "^4.16.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
