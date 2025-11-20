@@ -147,16 +147,10 @@ func HandleWBConnections(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// get wallet address from query parameter
+	// get wallet address or username from query parameter
 	walletAddress := r.URL.Query().Get("wallet")
 	if walletAddress == "" {
-		http.Error(w, "Wallet address required", http.StatusUnauthorized)
-		return
-	}
-
-	// validate wallet address format (basic validation)
-	if len(walletAddress) < 10 {
-		http.Error(w, "Invalid wallet address format", http.StatusBadRequest)
+		http.Error(w, "User identifier required", http.StatusUnauthorized)
 		return
 	}
 
@@ -180,13 +174,19 @@ func HandleWBConnections(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// create hash format username (first 6 + last 4 chars)
-	hashUserName := walletAddress[:6] + "..." + walletAddress[len(walletAddress)-4:]
+	// create hash format username (first 6 + last 4 chars) - handle short usernames
+	var hashUserName string
+	if len(walletAddress) > 10 {
+		hashUserName = walletAddress[:6] + "..." + walletAddress[len(walletAddress)-4:]
+	} else {
+		hashUserName = walletAddress
+	}
+	
 	emoji := getRandomAnimalEmoji()
 	data := map[string]UserData{
 		"userData": {
 			UserId:    walletAddress,
-			UserName:  hashUserName + " " + emoji,
+			UserName:  walletAddress + " " + emoji,
 			UserColor: GetRandomColor(),
 		},
 	}

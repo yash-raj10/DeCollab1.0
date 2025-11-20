@@ -10,6 +10,8 @@ export const API_ENDPOINTS = {
     LOGIN: `${API_CONFIG.BASE_URL}/api/auth/login`,
     REGISTER: `${API_CONFIG.BASE_URL}/api/auth/register`,
     PROFILE: `${API_CONFIG.BASE_URL}/api/profile`,
+    WALLET_CHECK: `${API_CONFIG.BASE_URL}/api/auth/wallet/check`,
+    WALLET_REGISTER: `${API_CONFIG.BASE_URL}/api/auth/wallet/register`,
   },
   DOCUMENTS: `${API_CONFIG.BASE_URL}/api/documents`,
   DRAWINGS: `${API_CONFIG.BASE_URL}/api/drawings`,

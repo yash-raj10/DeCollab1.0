@@ -62,7 +62,7 @@ interface BlockchainDoc {
 
 const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
   const router = useRouter();
-  const { walletConnection, connect, disconnect, isConnected, isLoading } =
+  const { walletConnection, connect, disconnect, isConnected, isLoading, user } =
     useWalletAuth();
   const ws = useRef<WebSocket | null>(null);
   const [isClient, setIsClient] = useState(false);
@@ -331,13 +331,13 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
     // Load saved document when component mounts
     loadDocument();
 
-    const walletAddress = walletConnection?.address;
-    if (!walletAddress) {
-      console.error("No wallet address found");
+    const username = user?.name || walletConnection?.address;
+    if (!username) {
+      console.error("No username found");
       return;
     }
 
-    ws.current = new WebSocket(buildWebSocketUrl(sessionId, walletAddress));
+    ws.current = new WebSocket(buildWebSocketUrl(sessionId, username));
 
     ws.current.addEventListener("open", () => {
       console.log("WebSocket connection established");

@@ -6,7 +6,7 @@ import Image from "next/image";
 
 export default function Home() {
   const router = useRouter();
-  const { walletConnection, connect, disconnect, isConnected } =
+  const { walletConnection, connect, disconnect, isConnected, user, isLoading } =
     useWalletAuth();
   const [joinSessionId, setJoinSessionId] = useState("");
   const [showJoinModal, setShowJoinModal] = useState(false);
@@ -40,6 +40,18 @@ export default function Home() {
     );
   };
 
+  const handleConnect = async () => {
+    const connected = await connect();
+    if (connected) {
+      // Wait a bit for user state to update
+      setTimeout(() => {
+        if (!user) {
+          router.push('/register');
+        }
+      }, 500);
+    }
+  };
+
   const createNewSession = async (type: "excalidraw" | "doc") => {
     if (!isConnected || !walletConnection) {
       // Show wallet connection prompt
@@ -47,6 +59,14 @@ export default function Home() {
       if (!connected) {
         return; // User cancelled or connection failed
       }
+    }
+
+    // Check if user is registered
+    if (!user) {
+      // Redirect to registration page
+      const sessionId = generateId();
+      router.push(`/register?redirect=${encodeURIComponent(`/${type}/${sessionId}`)}`);
+      return;
     }
 
     const sessionId = generateId();
@@ -62,6 +82,15 @@ export default function Home() {
       if (!connected) {
         return; // User cancelled or connection failed
       }
+    }
+
+    // Check if user is registered
+    if (!user) {
+      // Redirect to registration page
+      router.push(`/register?redirect=${encodeURIComponent(`/${joinType}/${joinSessionId.trim()}`)}`);
+      setShowJoinModal(false);
+      setJoinSessionId("");
+      return;
     }
 
     router.push(`/${joinType}/${joinSessionId.trim()}`);
@@ -137,6 +166,27 @@ export default function Home() {
             <div className="flex items-center gap-4">
               {isConnected && walletConnection ? (
                 <div className="flex items-center gap-4">
+                  {user && (
+                    <button
+                      onClick={() => router.push("/profile")}
+                      className="px-6 py-2 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 backdrop-blur-sm text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+                    >
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                        />
+                      </svg>
+                      My Profile
+                    </button>
+                  )}
                   <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 flex items-center gap-3">
                     <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg"></div>
                     <span className="text-white font-medium">
@@ -153,7 +203,7 @@ export default function Home() {
                 </div>
               ) : (
                 <button
-                  onClick={connect}
+                  onClick={handleConnect}
                   className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
                 >
                   <svg

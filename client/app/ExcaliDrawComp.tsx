@@ -49,7 +49,7 @@ const ExcalidrawWrapper: React.FC<ExcalidrawWrapperProps> = ({
   sessionId = "default",
 }) => {
   const router = useRouter();
-  const { walletConnection } = useWalletAuth();
+  const { walletConnection, user } = useWalletAuth();
   const ws = useRef<WebSocket | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -458,22 +458,22 @@ const ExcalidrawWrapper: React.FC<ExcalidrawWrapperProps> = ({
       // Load saved drawing when component mounts
       loadDrawing();
 
-      // Get wallet address instead of JWT token
-      const walletAddress = walletConnection?.address;
-      if (!walletAddress) {
-        console.error("No wallet connected");
+      // Get username for websocket connection
+      const username = user?.name || walletConnection?.address;
+      if (!username) {
+        console.error("No username found");
         return;
       }
 
-      // Initialize user data with wallet info
+      // Initialize user data with username for display
       userDataRef.current = {
-        userId: walletAddress,
-        userName: `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`,
+        userId: walletConnection?.address || username,
+        userName: user?.name || `${walletConnection?.address?.slice(0, 6)}...${walletConnection?.address?.slice(-4)}`,
         userColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
       };
 
-      // Include session ID and wallet address in WebSocket connection
-      const wsUrl = buildWebSocketUrl(sessionId, walletAddress);
+      // Include session ID and username in WebSocket connection
+      const wsUrl = buildWebSocketUrl(sessionId, username);
       ws.current = new WebSocket(wsUrl);
 
       ws.current.addEventListener("open", () => {

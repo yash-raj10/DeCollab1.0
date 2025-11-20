@@ -1,10 +1,18 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import { API_ENDPOINTS } from "../config/api";
 
 interface WalletConnection {
   address: string;
   chainId: number;
   isConnected: boolean;
+}
+
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  walletAddress: string;
 }
 
 interface WalletAuthContextType {
@@ -13,6 +21,8 @@ interface WalletAuthContextType {
   disconnect: () => void;
   isLoading: boolean;
   isConnected: boolean;
+  user: User | null;
+  checkUserRegistration: (walletAddress: string) => Promise<boolean>;
 }
 
 const WalletAuthContext = createContext<WalletAuthContextType | undefined>(
@@ -32,33 +42,76 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [walletConnection, setWalletConnection] =
     useState<WalletConnection | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const hasCheckedRef = useRef(false);
 
-  // Auto-restore wallet connection on mount
+  // Check if user is registered in MongoDB
+  const checkUserRegistration = async (walletAddress: string): Promise<boolean> => {
+    try {
+      const response = await fetch(API_ENDPOINTS.AUTH.WALLET_CHECK, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ walletAddress }),
+      });
+
+      const data = await response.json();
+      
+      if (data.exists && data.user) {
+        setUser(data.user);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        return true;
+      } else {
+        setUser(null);
+        localStorage.removeItem("user");
+        return false;
+      }
+    } catch (error) {
+      console.error("Error checking user registration:", error);
+      return false;
+    }
+  };
+
+  // Auto-restore wallet connection and user data on mount
   useEffect(() => {
-    const restoreConnection = async () => {
-      if (typeof window === "undefined" || !window.ethereum) return;
+    if (hasCheckedRef.current) return;
+    hasCheckedRef.current = true;
+    
+    const init = async () => {
+      if (typeof window === "undefined" || !window.ethereum) {
+        setIsLoading(false);
+        return;
+      }
+      
+      // Check if user manually disconnected
+      const manuallyDisconnected = localStorage.getItem("manuallyDisconnected");
+      if (manuallyDisconnected === "true") {
+        setIsLoading(false);
+        return;
+      }
+      
       try {
-        // Check if already connected
-        const accounts = await window.ethereum.request({
-          method: "eth_accounts",
-        });
+        const accounts = await window.ethereum.request({ method: "eth_accounts" });
         if (accounts && accounts.length > 0) {
-          const chainId = await window.ethereum.request({
-            method: "eth_chainId",
-          });
-          const chainIdDecimal = parseInt(chainId, 16);
+          const chainId = await window.ethereum.request({ method: "eth_chainId" });
           setWalletConnection({
             address: accounts[0],
-            chainId: chainIdDecimal,
+            chainId: parseInt(chainId, 16),
             isConnected: true,
           });
+          
+          // Check DB once
+          await checkUserRegistration(accounts[0]);
         }
       } catch (err) {
-        // Ignore
+        console.error("Error:", err);
       }
+      setIsLoading(false);
     };
-    restoreConnection();
+    
+    init();
   }, []);
 
   const connect = async (): Promise<boolean> => {
@@ -90,10 +143,12 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       };
 
       setWalletConnection(connection);
-
-      // Store in localStorage
       localStorage.setItem("walletConnected", "true");
       localStorage.setItem("walletAddress", connection.address);
+      localStorage.removeItem("manuallyDisconnected");
+
+      // Check DB once
+      await checkUserRegistration(connection.address);
 
       return true;
     } catch (error) {
@@ -107,8 +162,12 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const disconnect = () => {
     setWalletConnection(null);
+    setUser(null);
     localStorage.removeItem("walletConnected");
     localStorage.removeItem("walletAddress");
+    localStorage.removeItem("user");
+    localStorage.removeItem("authToken");
+    localStorage.setItem("manuallyDisconnected", "true");
   };
 
   const value: WalletAuthContextType = {
@@ -117,6 +176,8 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     disconnect,
     isLoading,
     isConnected: !!walletConnection?.isConnected,
+    user,
+    checkUserRegistration,
   };
 
   return (

@@ -61,11 +61,11 @@ func main() {
 	// 		"title": "Chat Room"})
 	// })
 
-	// auth routes
+	// auth routes (wallet-based only)
 	authGroup := r.Group("/api/auth")
 	{
-		authGroup.POST("/register", auth.Register)
-		authGroup.POST("/login", auth.Login)
+		authGroup.POST("/wallet/check", auth.CheckWallet)
+		authGroup.POST("/wallet/register", auth.RegisterWallet)
 	}
 
 	api := r.Group("/api")

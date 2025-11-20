@@ -14,26 +14,23 @@ import (
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
-	ID       interface{} `json:"id" bson:"_id,omitempty"`
-	Email    string      `json:"email" bson:"email"`
-	Password string      `json:"password" bson:"password"`
-	Name     string      `json:"name" bson:"name"`
+	ID            interface{} `json:"id" bson:"_id,omitempty"`
+	Email         string      `json:"email" bson:"email"`
+	Name          string      `json:"name" bson:"name"`
+	WalletAddress string      `json:"walletAddress" bson:"walletAddress"`
 }
 
-type LoginRequest struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+type WalletCheckRequest struct {
+	WalletAddress string `json:"walletAddress" binding:"required"`
 }
 
-
-type RegisterRequest struct {
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Name     string `json:"name" binding:"required"`
+type WalletRegisterRequest struct {
+	WalletAddress string `json:"walletAddress" binding:"required"`
+	Name          string `json:"name" binding:"required"`
+	Email         string `json:"email" binding:"required"`
 }
 
 
@@ -74,7 +71,7 @@ func InitMongoDB() error {
 		return err
 	}
 
-	usersCollection = client.Database("collabify").Collection("users")
+	usersCollection = client.Database("collabify").Collection("users1.0")
 	
 	fmt.Println("Connected to MongoDB!")
 	return nil
@@ -85,11 +82,11 @@ func GetUsersCollection() *mongo.Collection {
 	return usersCollection
 }
 
-// generates a JWT token for a user
-func GenerateJWT(userEmail string) (string, error) {
+// generates a JWT token for a user using wallet address
+func GenerateJWT(walletAddress string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_email": userEmail,
-		"exp":        time.Now().Add(time.Hour * 24 * 2).Unix(), // 2 dayys
+		"wallet_address": walletAddress,
+		"exp":            time.Now().Add(time.Hour * 24 * 7).Unix(), // 7 days
 	})
 
 	tokenString, err := token.SignedString(jwtSecret)
@@ -98,105 +95,6 @@ func GenerateJWT(userEmail string) (string, error) {
 	}
 
 	return tokenString, nil
-}
-
-// hashes a password using bcrypt
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-// checks if password matches hash
-func CheckPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
-
-func Register(c *gin.Context) {
-	var req RegisterRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	var existingUser User
-	err := usersCollection.FindOne(context.Background(), bson.M{"email": req.Email}).Decode(&existingUser)
-	if err == nil {
-		c.JSON(http.StatusConflict, gin.H{"error": "User already exists"})
-		return
-	}
-
-	// Hash password
-	hashedPassword, err := HashPassword(req.Password)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-		return
-	}
-
-	user := User{
-		Email:    req.Email,
-		Password: hashedPassword,
-		Name:     req.Name,
-	}
-
-	result, err := usersCollection.InsertOne(context.Background(), user)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
-		return
-	}
-
-	// Get the inserted ID as string
-	insertedID := result.InsertedID
-	user.ID = insertedID
-	user.Password = "" 
-
-	// Generate JWT using email
-	token, err := GenerateJWT(user.Email)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
-		return
-	}
-
-	c.JSON(http.StatusCreated, AuthResponse{
-		Token: token,
-		User:  user,
-	})
-}
-
-// login handles user login
-func Login(c *gin.Context) {
-	var req LoginRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	var user User
-	err := usersCollection.FindOne(context.Background(), bson.M{"email": req.Email}).Decode(&user)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
-		return
-	}
-
-	// check password
-	if !CheckPasswordHash(req.Password, user.Password) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
-		return
-	}
-
-	user.Password = "" 
-
-	// Generate JWT using email
-	token, err := GenerateJWT(user.Email)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
-		return
-	}
-
-	c.JSON(http.StatusOK, AuthResponse{
-		Token: token,
-		User:  user,
-	})
 }
 
 func AuthMiddleware() gin.HandlerFunc {
@@ -225,7 +123,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		// get user email from token
+		// get wallet address from token
 		claims, ok := token.Claims.(jwt.MapClaims)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token claims"})
@@ -233,33 +131,108 @@ func AuthMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		userEmail, ok := claims["user_email"].(string)
+		walletAddress, ok := claims["wallet_address"].(string)
 		if !ok {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid user email in token"})
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid wallet address in token"})
 			c.Abort()
 			return
 		}
 
-		c.Set("user_email", userEmail)
+		c.Set("wallet_address", walletAddress)
 		c.Next()
 	}
 }
 
 // returns the current user's profile
 func GetProfile(c *gin.Context) {
-	userEmail, exists := c.Get("user_email")
+	walletAddress, exists := c.Get("wallet_address")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not found"})
 		return
 	}
 
 	var user User
-	err := usersCollection.FindOne(context.Background(), bson.M{"email": userEmail}).Decode(&user)
+	err := usersCollection.FindOne(context.Background(), bson.M{"walletAddress": walletAddress}).Decode(&user)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
 
-	user.Password = "" 
 	c.JSON(http.StatusOK, user)
+}
+
+// checks if a wallet address exists in the database
+func CheckWallet(c *gin.Context) {
+	var req WalletCheckRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	var user User
+	err := usersCollection.FindOne(context.Background(), bson.M{"walletAddress": req.WalletAddress}).Decode(&user)
+	if err != nil {
+		// User not found
+		c.JSON(http.StatusOK, gin.H{
+			"exists": false,
+			"message": "User not registered",
+		})
+		return
+	}
+
+	// User found
+	c.JSON(http.StatusOK, gin.H{
+		"exists": true,
+		"user": user,
+	})
+}
+
+// registers a new user with wallet address
+func RegisterWallet(c *gin.Context) {
+	var req WalletRegisterRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Check if wallet already exists
+	var existingUser User
+	err := usersCollection.FindOne(context.Background(), bson.M{"walletAddress": req.WalletAddress}).Decode(&existingUser)
+	if err == nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "Wallet address already registered"})
+		return
+	}
+
+	// Check if email already exists
+	err = usersCollection.FindOne(context.Background(), bson.M{"email": req.Email}).Decode(&existingUser)
+	if err == nil {
+		c.JSON(http.StatusConflict, gin.H{"error": "Email already registered"})
+		return
+	}
+
+	user := User{
+		Email:         req.Email,
+		Name:          req.Name,
+		WalletAddress: req.WalletAddress,
+	}
+
+	result, err := usersCollection.InsertOne(context.Background(), user)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
+		return
+	}
+
+	user.ID = result.InsertedID
+
+	// Generate JWT using wallet address
+	token, err := GenerateJWT(user.WalletAddress)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to generate token"})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"token": token,
+		"user": user,
+	})
 }
