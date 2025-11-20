@@ -244,9 +244,9 @@ export default function Home() {
               </h1>
               <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
                 DeCollab is a decentralized platform for real-time document and
-                whiteboard collaboration. Your work is secured on the
-                blockchain, accessible from anywhere, and owned by you. No
-                central servers, no limits—just pure, peer-powered creation.
+                whiteboard collaboration powered by AI. Your work is secured on the
+                blockchain, enhanced by intelligent writing assistance, accessible from anywhere, and owned by you. No
+                central servers, no limits—just pure, AI-powered, peer-driven creation.
               </p>
             </div>
 
@@ -254,9 +254,15 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <button
                 onClick={() => createNewSession("doc")}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-sm"
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-sm flex items-center justify-center gap-2"
               >
                 📝 Start Writing
+                <span className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide flex items-center gap-1">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                  </svg>
+                  AI
+                </span>
               </button>
 
               <button
@@ -313,6 +319,62 @@ export default function Home() {
               <p className="text-xl text-white/80 max-w-2xl mx-auto">
                 Own your work. Collaborate globally. Trust the blockchain.
               </p>
+            </div>
+
+            {/* AI Features Highlight */}
+            <div className="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-md rounded-3xl p-8 border border-purple-300/30 mb-16 shadow-2xl">
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg mb-4">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                  </svg>
+                  <span className="font-bold text-sm">AI-POWERED WRITING</span>
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-4">
+                  Intelligent Writing Assistant Built-In
+                </h3>
+                <p className="text-white/80 text-lg max-w-2xl mx-auto">
+                  Transform your writing with advanced AI features. From rewriting and expanding text to grammar fixes and smart continuations—all integrated seamlessly into your collaborative workspace.
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-2xl mb-3">🔄</div>
+                  <h4 className="text-white font-semibold mb-2">Smart Rewriting</h4>
+                  <p className="text-white/70 text-sm">Instantly rewrite any text with improved clarity and style</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-2xl mb-3">✍️</div>
+                  <h4 className="text-white font-semibold mb-2">Continue Writing</h4>
+                  <p className="text-white/70 text-sm">AI continues your thoughts and completes your sentences naturally</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-2xl mb-3">📝</div>
+                  <h4 className="text-white font-semibold mb-2">Smart Summarize</h4>
+                  <p className="text-white/70 text-sm">Condense long text into clear, concise summaries</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-2xl mb-3">📈</div>
+                  <h4 className="text-white font-semibold mb-2">Expand Ideas</h4>
+                  <p className="text-white/70 text-sm">Add depth and detail to your concepts with AI expansion</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-2xl mb-3">✅</div>
+                  <h4 className="text-white font-semibold mb-2">Grammar Fix</h4>
+                  <p className="text-white/70 text-sm">Automatically correct grammar and improve readability</p>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="text-2xl mb-3">💬</div>
+                  <h4 className="text-white font-semibold mb-2">AI Chat Assistant</h4>
+                  <p className="text-white/70 text-sm">Ask questions and get help with your document content</p>
+                </div>
+              </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-16">
