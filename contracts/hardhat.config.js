@@ -16,39 +16,39 @@ module.exports = {
     hardhat: {
       chainId: 1337,
     },
-    base: {
-      url: "https://mainnet.base.org",
+    hederaTestnet: {
+      url: "https://testnet.hashio.io/api",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 8453,
-      gasPrice: 1000000000, // 1 gwei
+      chainId: 296,
+      gasPrice: 100000000, // 0.1 gwei (Hedera uses tinybar, 1 HBAR = 100,000,000 tinybar)
     },
-    baseSepolia: {
-      url: "https://sepolia.base.org",
+    hederaMainnet: {
+      url: "https://mainnet.hashio.io/api",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 84532,
-      gasPrice: 1000000000, // 1 gwei
+      chainId: 295,
+      gasPrice: 100000000, // 0.1 gwei
     },
   },
   etherscan: {
     apiKey: {
-      base: process.env.BASESCAN_API_KEY || "",
-      baseSepolia: process.env.BASESCAN_API_KEY || "",
+      hederaTestnet: process.env.HASHSCAN_API_KEY || "",
+      hederaMainnet: process.env.HASHSCAN_API_KEY || "",
     },
     customChains: [
       {
-        network: "base",
-        chainId: 8453,
+        network: "hederaTestnet",
+        chainId: 296,
         urls: {
-          apiURL: "https://api.basescan.org/api",
-          browserURL: "https://basescan.org",
+          apiURL: "https://hashscan.io/testnet/api",
+          browserURL: "https://hashscan.io/testnet",
         },
       },
       {
-        network: "baseSepolia",
-        chainId: 84532,
+        network: "hederaMainnet",
+        chainId: 295,
         urls: {
-          apiURL: "https://api-sepolia.basescan.org/api",
-          browserURL: "https://sepolia.basescan.org",
+          apiURL: "https://hashscan.io/mainnet/api",
+          browserURL: "https://hashscan.io/mainnet",
         },
       },
     ],

@@ -13,6 +13,15 @@ import {
   generateDocumentId,
   getTransactionUrl,
 } from "./utils/blockchain";
+import {
+  encryptData,
+  decryptData,
+  generateEncryptionKey,
+  getEncryptionKey,
+  storeEncryptionKey,
+  getCollaboratorAddresses,
+  addCollaborator,
+} from "./utils/encryption";
 import { useWalletAuth } from "./contexts/SimpleWalletContext";
 import TiptapEditor from "./components/TiptapEditor";
 
@@ -419,15 +428,36 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
     showToast("Saving to IPFS and blockchain...", "info");
 
     try {
-      // Step 1: Upload content to "IPFS" (Supabase)
+      // Step 1: Get or create encryption key
+      let encryptionKey = getEncryptionKey(sessionId, walletConnection.address);
+      let collaboratorAddresses = getCollaboratorAddresses(sessionId);
+
+      if (!encryptionKey) {
+        collaboratorAddresses = [walletConnection.address];
+        encryptionKey = generateEncryptionKey(collaboratorAddresses);
+        storeEncryptionKey(sessionId, encryptionKey, collaboratorAddresses);
+      } else {
+        // Add current user if not already in list
+        if (!collaboratorAddresses.includes(walletConnection.address)) {
+          addCollaborator(sessionId, walletConnection.address);
+          collaboratorAddresses = getCollaboratorAddresses(sessionId);
+          encryptionKey = generateEncryptionKey(collaboratorAddresses);
+        }
+      }
+
+      // Step 2: Encrypt content
+      showToast("Encrypting content...", "info");
+      const encryptedContent = await encryptData(editorContent, encryptionKey);
+
+      // Step 3: Upload encrypted content to "IPFS" (Supabase)
       showToast("Storing content...", "info");
-      const ipfsResult = await uploadToIPFS(editorContent);
+      const ipfsResult = await uploadToIPFS(encryptedContent);
       console.log("Content storage result:", ipfsResult);
 
       // Use document ID as CID for blockchain storage
       const cid = ipfsResult.cid;
 
-      // Step 2: Check if document already exists on blockchain
+      // Step 4: Check if document already exists on blockchain
       const existingDoc = await getDocumentFromChain(sessionId);
 
       let blockchainResult;
@@ -462,8 +492,7 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
     } catch (error) {
       console.error("Save error:", error);
       showToast(
-        `Failed to save document: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Failed to save document: ${error instanceof Error ? error.message : "Unknown error"
         }`,
         "error"
       );
@@ -474,26 +503,41 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
 
   // Load document function using blockchain + IPFS
   const loadDocument = useCallback(async () => {
-    if (!isClient) return;
+    if (!isClient || !walletConnection?.address) return;
 
     try {
-      const token = localStorage.getItem("authToken");
-      if (!token) return;
-
       // Get document metadata from blockchain
       const docMetadata = await getDocumentFromChain(sessionId);
       if (docMetadata && docMetadata.cid) {
-        // Get actual content from storage
+        // Get encrypted content from storage
         showToast("Loading document content...", "info");
-        const content = await getFromIPFS(docMetadata.cid);
+        const encryptedContent = await getFromIPFS(docMetadata.cid);
 
-        if (content) {
-          setEditorContent(content);
-          console.log("Document loaded from blockchain + storage:", {
-            docId: sessionId,
-            documentId: docMetadata.cid,
-            contentLength: content.length,
-          });
+        if (encryptedContent) {
+          // Get encryption key
+          let encryptionKey = getEncryptionKey(sessionId, walletConnection.address);
+
+          // If no key stored, try to derive from blockchain metadata
+          if (!encryptionKey) {
+            const collaborators = [docMetadata.createdBy];
+            encryptionKey = generateEncryptionKey(collaborators);
+            storeEncryptionKey(sessionId, encryptionKey, collaborators);
+          }
+
+          // Decrypt content
+          try {
+            const decryptedContent = await decryptData(encryptedContent, encryptionKey);
+            setEditorContent(decryptedContent);
+            console.log("Document loaded and decrypted:", {
+              docId: sessionId,
+              documentId: docMetadata.cid,
+              contentLength: decryptedContent.length,
+            });
+            showToast("Document loaded successfully!", "success");
+          } catch (decryptError) {
+            console.error("Decryption error:", decryptError);
+            showToast("Failed to decrypt document - access denied", "error");
+          }
         }
       }
       // If document doesn't exist on blockchain, that's fine - start with empty document
@@ -501,7 +545,7 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
       console.error("Load error:", error);
       showToast("Failed to load document content", "error");
     }
-  }, [isClient, sessionId]);
+  }, [isClient, sessionId, walletConnection]);
 
   // Get user documents function using blockchain
   const getUserDocuments = async (): Promise<BlockchainDoc[]> => {
@@ -617,14 +661,12 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
   }
 
   return (
-    <div className="bg-gradient-to-br from-blue-900 via-teal-900 to-emerald-800 relative min-h-screen flex flex-col text-black overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br from-blue-400/20 to-teal-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute top-32 -left-40 w-96 h-96 bg-gradient-to-br from-emerald-400/15 to-green-400/15 rounded-full blur-3xl animate-bounce"
-          style={{ animationDuration: "6s" }}
-        ></div>
+    <div className="bg-pastel-blue relative min-h-screen flex flex-col text-black overflow-hidden">
+      {/* Neobrutalism Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-32 h-32 bg-pastel-pink border-4 border-black transform rotate-12"></div>
+        <div className="absolute top-20 right-20 w-24 h-24 bg-pastel-yellow border-4 border-black transform -rotate-12"></div>
+        <div className="absolute bottom-20 left-20 w-28 h-28 bg-pastel-purple border-4 border-black transform rotate-45"></div>
       </div>
 
       {/* Sidebar */}
@@ -637,24 +679,24 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
           ></div>
 
           {/* Sidebar Content */}
-          <div className="relative z-10 w-80 bg-white/10 backdrop-blur-md border-r border-white/20 shadow-2xl overflow-y-auto">
+          <div className="relative z-10 w-80 bg-pastel-yellow border-r-4 border-black overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-white">My Documents</h2>
+                <h2 className="text-2xl font-black text-black uppercase">My Documents</h2>
                 <button
                   onClick={() => setShowSidebar(false)}
-                  className="p-2 text-white/70 hover:text-white transition-colors"
+                  className="neobrutal-button bg-pastel-pink p-2 text-black"
                 >
                   <svg
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M6 18L18 6M6 6l12 12"
                     />
                   </svg>
@@ -663,7 +705,7 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
 
               <div className="space-y-3">
                 {userDocuments.length === 0 ? (
-                  <div className="text-white/60 text-center py-8">
+                  <div className="text-black/80 text-center py-8 font-bold">
                     {!isConnected
                       ? "Connect your wallet to view documents"
                       : "No saved documents yet"}
@@ -672,14 +714,14 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
                   userDocuments.map((doc: BlockchainDoc) => (
                     <div
                       key={doc.id}
-                      className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20 hover:bg-white/20 transition-all duration-200"
+                      className="neobrutal-box bg-pastel-blue p-4"
                     >
                       <div className="flex items-center justify-between mb-3">
                         <div>
-                          <h3 className="text-white font-medium text-sm">
+                          <h3 className="text-black font-black text-sm uppercase">
                             {doc.docId.substring(0, 8)}...
                           </h3>
-                          <p className="text-white/60 text-xs">
+                          <p className="text-black/70 text-xs font-bold">
                             {new Date(doc.updatedAt).toLocaleDateString()}
                           </p>
                         </div>
@@ -689,13 +731,13 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
                       <div className="flex gap-2 mt-3">
                         <button
                           onClick={() => loadSpecificDocument(doc.docId)}
-                          className="flex-1 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-100 rounded-lg text-xs transition-colors border border-blue-400/30"
+                          className="flex-1 neobrutal-button bg-pastel-mint px-3 py-2 text-black text-xs font-black uppercase"
                         >
                           Load Document
                         </button>
                         <button
                           onClick={() => showDocumentDetails(doc)}
-                          className="px-3 py-2 bg-green-500/20 hover:bg-green-500/30 text-green-100 rounded-lg text-xs transition-colors border border-green-400/30"
+                          className="neobrutal-button bg-pastel-green px-3 py-2 text-black text-xs font-black uppercase"
                         >
                           📊 Details
                         </button>
@@ -709,129 +751,85 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
         </div>
       )}
 
-      {/* Glassmorphism Header */}
-      <header className="relative z-10 backdrop-blur-md bg-white/10 border-b border-white/20 shadow-lg">
+      {/* Neobrutalism Header */}
+      <header className="relative z-10 bg-pastel-yellow border-b-4 border-black">
         <div className="px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push("/")}
-              className="px-4 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-all duration-200 font-medium border border-white/30 hover:border-white/50"
+              className="neobrutal-button bg-pastel-pink px-4 py-2 text-black"
               title="Go back to home"
             >
               ← Back
             </button>
 
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-teal-400 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-12 h-12 bg-pastel-blue border-4 border-black flex items-center justify-center">
                 <svg
-                  className="w-6 h-6 text-white"
+                  className="w-6 h-6 text-black"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  strokeWidth={3}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">
+                <h1 className="text-2xl font-black text-black uppercase tracking-tight">
                   Collabify - Doc Online
                 </h1>
-                <p className="text-white/70 text-sm">
+                <p className="text-black/80 text-sm font-bold">
                   Collaborative Document Editor
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
             {/* Wallet Connection Status */}
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-2 border border-white/20 flex items-center gap-3">
+            <div className="neobrutal-box bg-pastel-green px-4 py-2 flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <span
-                  className={`w-3 h-3 rounded-full ${
-                    isConnected ? "bg-green-400" : "bg-orange-400"
-                  } shadow-lg`}
+                  className={`w-4 h-4 border-2 border-black ${isConnected ? "bg-pastel-mint" : "bg-pastel-orange"
+                    }`}
                 ></span>
-                <span className="text-white font-medium">
+                <span className="text-black font-black text-sm">
                   {isConnected
                     ? `${walletConnection?.address?.substring(
-                        0,
-                        6
-                      )}...${walletConnection?.address?.substring(
-                        walletConnection.address.length - 4
-                      )}`
+                      0,
+                      6
+                    )}...${walletConnection?.address?.substring(
+                      walletConnection.address.length - 4
+                    )}`
                     : "Wallet"}
                 </span>
               </div>
               {!isConnected ? (
                 <button
                   onClick={handleConnectWallet}
-                  className="text-orange-300 hover:text-white transition-colors text-sm px-2 py-1 bg-orange-500/20 rounded-lg"
+                  className="neobrutal-button bg-pastel-orange text-black text-xs font-black px-2 py-1"
                 >
                   Connect
                 </button>
               ) : (
-                <span className="text-green-300 text-sm">Connected</span>
+                <span className="text-black text-xs font-bold bg-pastel-mint px-2 py-1 border-2 border-black">Connected</span>
               )}
             </div>
 
             {/* Save Button and Status */}
             <div className="flex items-center gap-3">
-              {/* My Documents Button */}
-              <button
-                onClick={() => {
-                  if (!isConnected) {
-                    showToast("Please connect your wallet first", "error");
-                    return;
-                  }
-                  setShowSidebar(!showSidebar);
-                  if (!showSidebar) {
-                    loadUserDocuments();
-                  }
-                }}
-                className={`px-4 py-2 backdrop-blur-sm rounded-xl transition-all duration-200 font-medium border shadow-lg ${
-                  isConnected
-                    ? "bg-blue-500/20 hover:bg-blue-500/30 text-blue-100 border-blue-400/30 hover:border-blue-400/50"
-                    : "bg-gray-500/20 text-gray-300 border-gray-400/30 cursor-not-allowed"
-                }`}
-                title={
-                  isConnected
-                    ? "My saved documents"
-                    : "Connect wallet to view documents"
-                }
-                disabled={!isConnected}
-              >
-                <div className="flex items-center gap-2">
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 011-1h1a2 2 0 011 1v2M7 7h10"
-                    />
-                  </svg>
-                  My Docs
-                </div>
-              </button>
-
               <button
                 onClick={saveDocument}
                 disabled={isSaving || !isConnected}
-                className={`px-4 py-2 rounded-xl font-medium transition-all duration-200 border ${
-                  isSaving || !isConnected
-                    ? "bg-gray-400/20 text-gray-300 cursor-not-allowed border-gray-400/30"
-                    : "bg-green-500/20 hover:bg-green-500/30 text-green-100 border-green-400/30 hover:border-green-400/50 shadow-lg hover:shadow-xl"
-                }`}
+                className={`neobrutal-button px-4 py-2 text-black ${isSaving || !isConnected
+                  ? "bg-pastel-yellow opacity-50 cursor-not-allowed"
+                  : "bg-pastel-mint"
+                  }`}
                 title={
                   !isConnected
                     ? "Connect wallet to save documents"
@@ -840,7 +838,7 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
               >
                 {isSaving ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-4 h-4 border-2 border-black border-t-transparent animate-spin"></div>
                     Saving...
                   </div>
                 ) : (
@@ -850,11 +848,11 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      strokeWidth={3}
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
                         d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 0V4a1 1 0 00-1-1H9a1 1 0 00-1 1v3m1 0h4m-4 0V4h4v3"
                       />
                     </svg>
@@ -864,9 +862,9 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
               </button>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-4 py-2 border border-white/20">
-              <span className="text-sm text-white/80">Session ID:</span>
-              <span className="font-mono text-white font-medium ml-2">
+            <div className="neobrutal-box bg-pastel-orange px-4 py-2">
+              <span className="text-sm text-black font-bold">Session ID:</span>
+              <span className="font-mono text-black font-black ml-2">
                 {sessionId}
               </span>
               <button
@@ -875,27 +873,26 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
                     navigator.clipboard.writeText(
                       `${window.location.origin}/doc/${sessionId}`
                     );
+                    showToast("Link copied!", "success");
                   }
                 }}
-                className="ml-3 text-blue-300 hover:text-white transition-colors"
+                className="ml-3 text-black hover:opacity-70 transition-opacity border-2 border-black px-2 py-1 bg-pastel-pink font-bold"
                 title="Copy session link"
               >
                 📋
               </button>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="flex gap-1">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-2">
                 {users.map((user: UserDataType, index: number) => (
                   <div
                     key={user.userId}
-                    className={`text-white px-3 py-2 rounded-xl backdrop-blur-sm border border-white/20 text-sm font-medium ${
-                      index > 0 && "-ml-2"
-                    } hover:scale-105 transition-transform`}
-                    style={{
-                      background: `${user.userColor || "#666"}40`,
-                      borderColor: user.userColor || "#666",
-                    }}
+                    className={`neobrutal-box px-3 py-2 text-sm font-black text-black ${index % 4 === 0 ? "bg-pastel-pink" :
+                      index % 4 === 1 ? "bg-pastel-blue" :
+                        index % 4 === 2 ? "bg-pastel-yellow" :
+                          "bg-pastel-purple"
+                      }`}
                     title={user.userName ?? ""}
                   >
                     {user.userName || "Guest"}
@@ -1055,7 +1052,7 @@ const DocPage: React.FC<DocPageProps> = ({ sessionId = "default" }) => {
                       📋
                     </button>
                     <a
-                      href={`https://explorer.testnet.rootstock.io/address/${selectedDocument.createdBy}`}
+                      href={`https://hashscan.io/testnet/address/${selectedDocument.createdBy}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-green-300 hover:text-white transition-colors"

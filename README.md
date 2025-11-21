@@ -36,7 +36,7 @@
 
 ### Blockchain & Backend
 
-- **Rootstock (RSK) Smart Contracts** — Document metadata and ownership
+- **Hedera Smart Contracts** — Document metadata and ownership
 - **Go** — Backend API for off-chain features
 - **WebSockets** — Real-time bidirectional communication
 - **IPFS/Supabase** — Decentralized document and drawing storage
@@ -49,6 +49,8 @@
 - **Web3.js** — Blockchain interaction
 
 ## 🚀 Getting Started
+
+> 📖 **For detailed step-by-step instructions, see [RUN_STEPS.md](./RUN_STEPS.md)**
 
 ### Prerequisites
 
@@ -79,8 +81,8 @@
    JWT_SECRET=your_jwt_secret_key
    PORT=8080
    # Blockchain config
-   RSK_CONTRACT_ADDRESS=your_contract_address
-   RSK_RPC_URL=https://public-node.testnet.rsk.co
+   HEDERA_CONTRACT_ADDRESS=0x0658cEa786FcB7E2d0dDfCf7B88103b24d9E9a9F
+   HEDERA_RPC_URL=https://testnet.hashio.io/api
    ```
 
 4. **Run the server**
@@ -110,8 +112,8 @@
 
    NEXT_PUBLIC_API_URL=http://localhost:8080
    NEXT_PUBLIC_WS_URL=ws://localhost:8080
-   NEXT_PUBLIC_RSK_CONTRACT_ADDRESS=your_contract_address
-   NEXT_PUBLIC_RSK_RPC_URL=https://public-node.testnet.rsk.co
+   NEXT_PUBLIC_HEDERA_CONTRACT_ADDRESS=0x0658cEa786FcB7E2d0dDfCf7B88103b24d9E9a9F
+   NEXT_PUBLIC_HEDERA_RPC_URL=https://testnet.hashio.io/api
    ```
 
 4. **Run the development server**

@@ -80,7 +80,7 @@ interface BlockchainDoc {
 
    - Click "Connect" button
    - MetaMask prompts for connection
-   - Switches to Rootstock testnet if needed
+   - Switches to Hedera testnet if needed
 
 3. **View My Documents**:
 
@@ -114,7 +114,7 @@ interface BlockchainDoc {
 ### Error Handling:
 
 - **No Wallet**: Clear messaging about needing wallet connection
-- **Wrong Network**: Automatically switches to Rootstock testnet
+- **Wrong Network**: Automatically switches to Hedera testnet
 - **Transaction Failures**: Detailed error messages for different scenarios
 - **Loading States**: Visual feedback during blockchain operations
 
@@ -130,7 +130,7 @@ interface BlockchainDoc {
 // User flow:
 1. User opens document page
 2. Clicks "Connect" to connect wallet
-3. Wallet switches to Rootstock testnet
+3. Wallet switches to Hedera testnet
 4. User writes content and clicks "Save"
 5. Content stored in Supabase, metadata on blockchain
 6. User clicks "My Docs" to see their documents

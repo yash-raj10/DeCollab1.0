@@ -104,60 +104,41 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-32 w-80 h-80 bg-gradient-to-br from-purple-400/30 to-pink-400/30 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute top-32 -left-40 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl animate-bounce"
-          style={{ animationDuration: "6s" }}
-        ></div>
-        <div
-          className="absolute bottom-20 right-20 w-64 h-64 bg-gradient-to-br from-emerald-400/25 to-teal-400/25 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
+    <div className="min-h-screen bg-pastel-blue relative overflow-hidden">
+      {/* Neobrutalism Background Pattern */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-0 left-0 w-40 h-40 bg-pastel-pink border-4 border-black transform rotate-12"></div>
+        <div className="absolute top-20 right-20 w-32 h-32 bg-pastel-yellow border-4 border-black transform -rotate-12"></div>
+        <div className="absolute bottom-20 left-20 w-36 h-36 bg-pastel-purple border-4 border-black transform rotate-45"></div>
+        <div className="absolute bottom-0 right-0 w-44 h-44 bg-pastel-mint border-4 border-black transform -rotate-12"></div>
+        <div className="absolute top-1/2 left-1/2 w-28 h-28 bg-pastel-orange border-4 border-black transform rotate-12"></div>
       </div>
 
-      {/* Glassmorphism particles */}
-      <div className="absolute inset-0">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-white/10 rounded-full animate-pulse"
-            style={{
-              left: particle.left,
-              top: particle.top,
-              animationDelay: particle.animationDelay,
-              animationDuration: particle.animationDuration,
-            }}
-          />
-        ))}
-      </div>
-      {/* Glassmorphism Header */}
-      <header className="relative z-10 backdrop-blur-md bg-white/10 border-b border-white/20 shadow-lg">
+      {/* Neobrutalism Header */}
+      <header className="relative z-10 bg-pastel-yellow border-b-4 border-black">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 bg-pastel-purple border-4 border-black flex items-center justify-center">
                 <svg
-                  className="w-7 h-7 text-white"
+                  className="w-8 h-8 text-black"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  strokeWidth={3}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={2}
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-black text-black uppercase tracking-tight">
                   DeCollab
                 </h1>
-                <p className="text-white/70 text-sm">
+                <p className="text-black/80 text-sm font-bold">
                   Decentralized Real-time Collaboration
                 </p>
               </div>
@@ -169,34 +150,34 @@ export default function Home() {
                   {user && (
                     <button
                       onClick={() => router.push("/profile")}
-                      className="px-6 py-2 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 backdrop-blur-sm text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+                      className="neobrutal-button bg-pastel-blue px-6 py-2 text-black flex items-center gap-2"
                     >
                       <svg
                         className="w-5 h-5"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
+                        strokeWidth={3}
                       >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          strokeWidth={2}
                           d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                         />
                       </svg>
                       My Profile
                     </button>
                   )}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20 flex items-center gap-3">
-                    <div className="w-3 h-3 bg-green-400 rounded-full shadow-lg"></div>
-                    <span className="text-white font-medium">
+                  <div className="neobrutal-box bg-pastel-green px-4 py-2 flex items-center gap-3">
+                    <div className="w-4 h-4 bg-pastel-mint border-2 border-black"></div>
+                    <span className="text-black font-black text-sm">
                       {walletConnection.address.substring(0, 6)}...
-                      {walletConnection.address.substring(-4)}
+                      {walletConnection.address.substring(walletConnection.address.length - 4)}
                     </span>
                   </div>
                   <button
                     onClick={disconnect}
-                    className="px-6 py-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white rounded-xl transition-all duration-200 font-medium border border-white/30 hover:border-white/50"
+                    className="neobrutal-button bg-pastel-orange px-6 py-2 text-black"
                   >
                     Disconnect
                   </button>
@@ -204,18 +185,18 @@ export default function Home() {
               ) : (
                 <button
                   onClick={handleConnect}
-                  className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+                  className="neobrutal-button bg-pastel-pink px-6 py-2 text-black flex items-center gap-2"
                 >
                   <svg
                     className="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m10 0h2a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
@@ -232,17 +213,17 @@ export default function Home() {
         <section className="px-6 py-20">
           <div className="max-w-7xl mx-auto text-center">
             <div className="mb-8">
-              <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-full text-purple-200 text-sm font-medium border border-purple-300/30 mb-6">
+              <span className="inline-block neobrutal-box bg-pastel-lavender px-4 py-2 text-black text-sm font-black uppercase mb-6">
                 🌐 Decentralized Collaboration, Redefined
               </span>
-              <h1 className="text-6xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-6xl md:text-7xl font-black mb-6 text-black uppercase leading-tight">
                 Collaborate
                 <br />
-                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                <span className="text-black">
                   On-Chain. In Real-Time.
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl md:text-2xl text-black/90 max-w-3xl mx-auto leading-relaxed font-bold">
                 DeCollab is a decentralized platform for real-time document and
                 whiteboard collaboration powered by AI. Your work is secured on the
                 blockchain, enhanced by intelligent writing assistance, accessible from anywhere, and owned by you. No
@@ -254,23 +235,20 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <button
                 onClick={() => createNewSession("doc")}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-sm flex items-center justify-center gap-2"
+                className="neobrutal-button bg-pastel-blue px-8 py-4 text-black text-lg flex items-center justify-center gap-2"
               >
                 📝 Start Writing
-                <span className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
-                  </svg>
-                  AI
+                <span className="border-2 border-black text-black text-xs font-black px-2 py-1 uppercase">
+                  AI ✨
                 </span>
               </button>
 
               <button
                 onClick={() => createNewSession("excalidraw")}
-                className="px-8 py-4 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-2xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl backdrop-blur-sm flex items-center justify-center gap-2"
+                className="neobrutal-button bg-pastel-pink px-8 py-4 text-black text-lg flex items-center justify-center gap-2"
               >
                 🎨 Start Drawing
-                <span className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                <span className="bg-pastel-orange border-2 border-black text-black text-xs font-black px-2 py-1 uppercase">
                   Beta
                 </span>
               </button>
@@ -286,22 +264,22 @@ export default function Home() {
                     ?.scrollIntoView({ behavior: "smooth" })
                 }
               >
-                <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full p-3 hover:bg-white/20 transition-all duration-300 group-hover:scale-110 shadow-lg w-12 h-12 flex items-center justify-center">
+                <div className="neobrutal-box bg-pastel-yellow p-3 w-14 h-14 flex items-center justify-center">
                   <svg
-                    className="w-6 h-6 text-white group-hover:text-purple-200 transition-colors duration-300"
+                    className="w-6 h-6 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M19 14l-7 7m0 0l-7-7m7 7V3"
                     />
                   </svg>
                 </div>
-                <span className="text-white/60 text-sm font-medium group-hover:text-white/80 transition-colors duration-300 mt-2">
+                <span className="text-black text-sm font-black mt-2 uppercase">
                   Explore Features
                 </span>
               </div>
@@ -313,144 +291,144 @@ export default function Home() {
         <section id="features" className="px-6 py-20">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h2 className="text-5xl md:text-6xl font-black text-black uppercase mb-6">
                 Why DeCollab?
               </h2>
-              <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              <p className="text-xl text-black/90 max-w-2xl mx-auto font-bold">
                 Own your work. Collaborate globally. Trust the blockchain.
               </p>
             </div>
 
             {/* AI Features Highlight */}
-            <div className="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 backdrop-blur-md rounded-3xl p-8 border border-purple-300/30 mb-16 shadow-2xl">
+            <div className="neobrutal-box bg-pastel-lavender p-8 mb-16">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full shadow-lg mb-4">
+                <div className="inline-flex items-center gap-2 neobrutal-box bg-pastel-purple px-4 py-2 text-black mb-4">
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
                   </svg>
-                  <span className="font-bold text-sm">AI-POWERED WRITING</span>
+                  <span className="font-black text-sm uppercase">AI-POWERED WRITING</span>
                 </div>
-                <h3 className="text-3xl font-bold text-white mb-4">
+                <h3 className="text-4xl font-black text-black uppercase mb-4">
                   Intelligent Writing Assistant Built-In
                 </h3>
-                <p className="text-white/80 text-lg max-w-2xl mx-auto">
+                <p className="text-black/90 text-lg max-w-2xl mx-auto font-bold">
                   Transform your writing with advanced AI features. From rewriting and expanding text to grammar fixes and smart continuations—all integrated seamlessly into your collaborative workspace.
                 </p>
               </div>
-              
+
               <div className="grid md:grid-cols-3 gap-6">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="text-2xl mb-3">🔄</div>
-                  <h4 className="text-white font-semibold mb-2">Smart Rewriting</h4>
-                  <p className="text-white/70 text-sm">Instantly rewrite any text with improved clarity and style</p>
+                <div className="neobrutal-box bg-pastel-pink p-6">
+                  <div className="text-3xl mb-3">🔄</div>
+                  <h4 className="text-black font-black mb-2 uppercase">Smart Rewriting</h4>
+                  <p className="text-black/80 text-sm font-bold">Instantly rewrite any text with improved clarity and style</p>
                 </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="text-2xl mb-3">✍️</div>
-                  <h4 className="text-white font-semibold mb-2">Continue Writing</h4>
-                  <p className="text-white/70 text-sm">AI continues your thoughts and completes your sentences naturally</p>
+
+                <div className="neobrutal-box bg-pastel-blue p-6">
+                  <div className="text-3xl mb-3">✍️</div>
+                  <h4 className="text-black font-black mb-2 uppercase">Continue Writing</h4>
+                  <p className="text-black/80 text-sm font-bold">AI continues your thoughts and completes your sentences naturally</p>
                 </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="text-2xl mb-3">📝</div>
-                  <h4 className="text-white font-semibold mb-2">Smart Summarize</h4>
-                  <p className="text-white/70 text-sm">Condense long text into clear, concise summaries</p>
+
+                <div className="neobrutal-box bg-pastel-yellow p-6">
+                  <div className="text-3xl mb-3">📝</div>
+                  <h4 className="text-black font-black mb-2 uppercase">Smart Summarize</h4>
+                  <p className="text-black/80 text-sm font-bold">Condense long text into clear, concise summaries</p>
                 </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="text-2xl mb-3">📈</div>
-                  <h4 className="text-white font-semibold mb-2">Expand Ideas</h4>
-                  <p className="text-white/70 text-sm">Add depth and detail to your concepts with AI expansion</p>
+
+                <div className="neobrutal-box bg-pastel-mint p-6">
+                  <div className="text-3xl mb-3">📈</div>
+                  <h4 className="text-black font-black mb-2 uppercase">Expand Ideas</h4>
+                  <p className="text-black/80 text-sm font-bold">Add depth and detail to your concepts with AI expansion</p>
                 </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="text-2xl mb-3">✅</div>
-                  <h4 className="text-white font-semibold mb-2">Grammar Fix</h4>
-                  <p className="text-white/70 text-sm">Automatically correct grammar and improve readability</p>
+
+                <div className="neobrutal-box bg-pastel-orange p-6">
+                  <div className="text-3xl mb-3">✅</div>
+                  <h4 className="text-black font-black mb-2 uppercase">Grammar Fix</h4>
+                  <p className="text-black/80 text-sm font-bold">Automatically correct grammar and improve readability</p>
                 </div>
-                
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <div className="text-2xl mb-3">💬</div>
-                  <h4 className="text-white font-semibold mb-2">AI Chat Assistant</h4>
-                  <p className="text-white/70 text-sm">Ask questions and get help with your document content</p>
+
+                <div className="neobrutal-box bg-pastel-purple p-6">
+                  <div className="text-3xl mb-3">💬</div>
+                  <h4 className="text-black font-black mb-2 uppercase">AI Chat Assistant</h4>
+                  <p className="text-black/80 text-sm font-bold">Ask questions and get help with your document content</p>
                 </div>
               </div>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8 mb-16">
               {/* Feature Cards */}
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <div className="neobrutal-box bg-pastel-pink p-8">
+                <div className="w-20 h-20 bg-pastel-purple border-4 border-black flex items-center justify-center mb-6">
                   <svg
-                    className="w-8 h-8 text-white"
+                    className="w-10 h-10 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M13 10V3L4 14h7v7l9-11h-7z"
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-black text-black uppercase mb-4">
                   On-Chain Real-time Collaboration
                 </h3>
-                <p className="text-white/80 leading-relaxed">
+                <p className="text-black/90 leading-relaxed font-bold">
                   All edits and sessions are secured and timestamped on the
                   blockchain. Experience true ownership and transparency as you
                   collaborate live with your team.
                 </p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-green-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <div className="neobrutal-box bg-pastel-mint p-8">
+                <div className="w-20 h-20 bg-pastel-green border-4 border-black flex items-center justify-center mb-6">
                   <svg
-                    className="w-8 h-8 text-white"
+                    className="w-10 h-10 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 0V4a1 1 0 00-1-1H9a1 1 0 00-1 1v3m1 0h4m-4 0V4h4v3"
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-black text-black uppercase mb-4">
                   Decentralized Storage
                 </h3>
-                <p className="text-white/80 leading-relaxed">
+                <p className="text-black/90 leading-relaxed font-bold">
                   Your documents and drawings are stored on decentralized
                   networks. No single point of failure, no vendor lock-in—just
                   your data, always accessible.
                 </p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-400 to-teal-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <div className="neobrutal-box bg-pastel-blue p-8">
+                <div className="w-20 h-20 bg-pastel-yellow border-4 border-black flex items-center justify-center mb-6">
                   <svg
-                    className="w-8 h-8 text-white"
+                    className="w-10 h-10 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-black text-black uppercase mb-4">
                   Secure & Private
                 </h3>
-                <p className="text-white/80 leading-relaxed">
+                <p className="text-black/90 leading-relaxed font-bold">
                   Authenticate with your wallet. Only you and your chosen
                   collaborators can access your work. No email, no
                   passwords—just cryptographic security.
@@ -460,54 +438,54 @@ export default function Home() {
 
             {/* Additional Features Row */}
             <div className="grid md:grid-cols-2 gap-8 mb-16 max-w-4xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <div className="neobrutal-box bg-pastel-orange p-8">
+                <div className="w-20 h-20 bg-pastel-yellow border-4 border-black flex items-center justify-center mb-6">
                   <svg
-                    className="w-8 h-8 text-white"
+                    className="w-10 h-10 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 011-1h1a2 2 0 011 1v2M7 7h10"
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-black text-black uppercase mb-4">
                   Your Decentralized Workspace
                 </h3>
-                <p className="text-white/80 leading-relaxed">
+                <p className="text-black/90 leading-relaxed font-bold">
                   All your documents and drawings, managed by your wallet.
                   Browse, organize, and access your on-chain library from
                   anywhere.
                 </p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300 transform hover:scale-105">
-                <div className="w-16 h-16 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+              <div className="neobrutal-box bg-pastel-lavender p-8">
+                <div className="w-20 h-20 bg-pastel-purple border-4 border-black flex items-center justify-center mb-6">
                   <svg
-                    className="w-8 h-8 text-white"
+                    className="w-10 h-10 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">
+                <h3 className="text-2xl font-black text-black uppercase mb-4">
                   Multi-user, Borderless
                 </h3>
-                <p className="text-white/80 leading-relaxed">
+                <p className="text-black/90 leading-relaxed font-bold">
                   Collaborate with anyone, anywhere. Share session links and see
-                  everyone’s edits in real-time—no accounts, just wallets.
+                  everyone's edits in real-time—no accounts, just wallets.
                 </p>
               </div>
             </div>
@@ -518,10 +496,10 @@ export default function Home() {
         <section className="px-6 py-20">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h2 className="text-5xl md:text-6xl font-black text-black uppercase mb-6">
                 Get Started
               </h2>
-              <p className="text-xl text-white/80 max-w-2xl mx-auto">
+              <p className="text-xl text-black/90 max-w-2xl mx-auto font-bold">
                 Pick your tool and start collaborating on-chain
               </p>
             </div>
@@ -529,47 +507,47 @@ export default function Home() {
             {/* Enhanced Options Cards */}
             <div className="grid lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {/* Doc Online Option */}
-              <div className="group bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl">
+              <div className="neobrutal-box bg-pastel-blue p-8">
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-teal-500 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-2xl group-hover:shadow-blue-500/25 transition-all duration-500">
+                  <div className="w-28 h-28 bg-pastel-mint border-4 border-black mx-auto mb-8 flex items-center justify-center">
                     <svg
-                      className="w-12 h-12 text-white"
+                      className="w-14 h-14 text-black"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      strokeWidth={3}
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
                   </div>
-                  <h2 className="text-3xl font-bold text-white mb-4">
+                  <h2 className="text-4xl font-black text-black uppercase mb-4">
                     DeCollab Docs
                   </h2>
-                  <p className="text-white/80 mb-8 leading-relaxed text-lg">
+                  <p className="text-black/90 mb-8 leading-relaxed text-lg font-bold">
                     Decentralized document editor with on-chain saving. Write,
                     edit, and own your documents. Access your work from any
                     device and collaborate in real-time with live cursor
                     tracking.
                   </p>
-                  <div className="flex justify-center space-x-6 text-sm text-white/70 mb-8">
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                  <div className="flex justify-center flex-wrap gap-3 text-sm mb-8">
+                    <span className="neobrutal-box bg-pastel-green px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       Live editing
                     </span>
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-orange-400 rounded-full mr-2"></div>
+                    <span className="neobrutal-box bg-pastel-orange px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       Live cursors
                     </span>
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                    <span className="neobrutal-box bg-pastel-mint px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       Cloud save
                     </span>
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+                    <span className="neobrutal-box bg-pastel-purple px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       My Docs
                     </span>
                   </div>
@@ -577,13 +555,13 @@ export default function Home() {
                   <div className="space-y-4">
                     <button
                       onClick={() => createNewSession("doc")}
-                      className="w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg"
+                      className="w-full neobrutal-button bg-pastel-mint py-4 px-6 text-black text-lg font-black uppercase"
                     >
                       📝 Create New Session
                     </button>
                     <button
                       onClick={() => openJoinModal("doc")}
-                      className="w-full border-2 border-blue-400/50 text-blue-300 hover:bg-blue-500/20 hover:text-white hover:border-blue-300 font-semibold py-4 px-6 rounded-2xl transition-all duration-300 backdrop-blur-sm text-lg"
+                      className="w-full neobrutal-button bg-pastel-blue py-4 px-6 text-black text-lg font-black uppercase"
                     >
                       📎 Join Existing Session
                     </button>
@@ -605,52 +583,52 @@ export default function Home() {
               </div>
 
               {/* ExcaliDraw Option */}
-              <div className="group bg-white/10 backdrop-blur-lg rounded-3xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl">
+              <div className="neobrutal-box bg-pastel-pink p-8">
                 <div className="text-center">
-                  <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-2xl group-hover:shadow-purple-500/25 transition-all duration-500">
+                  <div className="w-28 h-28 bg-pastel-purple border-4 border-black mx-auto mb-8 flex items-center justify-center">
                     <svg
-                      className="w-12 h-12 text-white"
+                      className="w-14 h-14 text-black"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
+                      strokeWidth={3}
                     >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        strokeWidth={2}
                         d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                       />
                     </svg>
                   </div>
-                  <h2 className="text-3xl font-bold text-white mb-4 flex items-center justify-center gap-3">
+                  <h2 className="text-4xl font-black text-black uppercase mb-4 flex items-center justify-center gap-3">
                     DeCollab Whiteboard
-                    <span className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wide">
+                    <span className="neobrutal-box bg-pastel-orange px-2 py-1 text-black text-xs font-black uppercase">
                       Beta
                     </span>
                   </h2>
-                  <p className="text-white/80 mb-8 leading-relaxed text-lg">
+                  <p className="text-black/90 mb-8 leading-relaxed text-lg font-bold">
                     Decentralized whiteboard for diagrams, sketches, and visual
                     brainstorms. Save your drawings on-chain and access them
                     from anywhere.{" "}
-                    <span className="text-orange-300 font-medium">
+                    <span className="text-black font-black">
                       Real-time collaboration features are in beta.
                     </span>
                   </p>
-                  <div className="flex justify-center space-x-6 text-sm text-white/70 mb-8">
-                    <span className="flex items-center bg-orange-500/20 px-3 py-1 rounded-full border border-orange-500/30">
-                      <div className="w-2 h-2 bg-orange-400 rounded-full mr-2"></div>
+                  <div className="flex justify-center flex-wrap gap-3 text-sm mb-8">
+                    <span className="neobrutal-box bg-pastel-orange px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       Realtime sync(Beta)
                     </span>
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                    <span className="neobrutal-box bg-pastel-mint px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       Multiuser cursors
                     </span>
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-purple-400 rounded-full mr-2"></div>
+                    <span className="neobrutal-box bg-pastel-purple px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       Cloud save
                     </span>
-                    <span className="flex items-center bg-white/10 px-3 py-1 rounded-full">
-                      <div className="w-2 h-2 bg-pink-400 rounded-full mr-2"></div>
+                    <span className="neobrutal-box bg-pastel-yellow px-3 py-1 text-black font-black text-xs uppercase">
+                      <div className="w-2 h-2 bg-black inline-block mr-2"></div>
                       My Drawings
                     </span>
                   </div>
@@ -658,13 +636,13 @@ export default function Home() {
                   <div className="space-y-4">
                     <button
                       onClick={() => createNewSession("excalidraw")}
-                      className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg"
+                      className="w-full neobrutal-button bg-pastel-purple py-4 px-6 text-black text-lg font-black uppercase"
                     >
                       🎨 Create New Session
                     </button>
                     <button
                       onClick={() => openJoinModal("excalidraw")}
-                      className="w-full border-2 border-purple-400/50 text-purple-300 hover:bg-purple-500/20 hover:text-white hover:border-purple-300 font-semibold py-4 px-6 rounded-2xl transition-all duration-300 backdrop-blur-sm text-lg"
+                      className="w-full neobrutal-button bg-pastel-lavender py-4 px-6 text-black text-lg font-black uppercase"
                     >
                       📎 Join Existing Session
                     </button>
@@ -688,11 +666,11 @@ export default function Home() {
 
             {/* Additional Info */}
             <div className="text-center mt-16">
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 max-w-2xl mx-auto">
-                <h3 className="text-2xl font-bold text-white mb-4">
+              <div className="neobrutal-box bg-pastel-yellow p-8 max-w-2xl mx-auto">
+                <h3 className="text-3xl font-black text-black uppercase mb-4">
                   Create, Own & Collaborate
                 </h3>
-                <p className="text-white/80 leading-relaxed">
+                <p className="text-black/90 leading-relaxed font-bold">
                   Start creating instantly. Your work is saved on-chain and
                   owned by your wallet. Share session links for instant
                   collaboration or access your decentralized library from any
@@ -705,36 +683,36 @@ export default function Home() {
       </main>
 
       {/* Enhanced Footer */}
-      <footer className="relative z-10 bg-white/5 backdrop-blur-md border-t border-white/20">
+      <footer className="relative z-10 bg-pastel-purple border-t-4 border-black">
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid md:grid-cols-2 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
+                <div className="w-12 h-12 bg-pastel-pink border-4 border-black flex items-center justify-center">
                   <svg
-                    className="w-6 h-6 text-white"
+                    className="w-7 h-7 text-black"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    strokeWidth={3}
                   >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M13 10V3L4 14h7v7l9-11h-7z"
                     />
                   </svg>
                 </div>
-                <h3 className="text-2xl font-bold text-white">DeCollab</h3>
+                <h3 className="text-3xl font-black text-black uppercase">DeCollab</h3>
               </div>
-              <p className="text-white/70 mb-6">
+              <p className="text-black/90 mb-6 font-bold">
                 Decentralized Real-Time Collaboration. Create, own, and share
                 documents and drawings on-chain.
               </p>
             </div>
 
             <div>
-              <h4 className="text-lg font-semibold text-white mb-4">
+              <h4 className="text-xl font-black text-black uppercase mb-4">
                 Connect with the Creator
               </h4>
               <div className="flex space-x-4">
@@ -742,11 +720,11 @@ export default function Home() {
                   href="https://www.linkedin.com/in/yash-raj-in/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors"
+                  className="neobrutal-box bg-pastel-blue w-12 h-12 flex items-center justify-center"
                   title="LinkedIn"
                 >
                   <svg
-                    className="w-5 h-5 text-white"
+                    className="w-6 h-6 text-black"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -757,11 +735,11 @@ export default function Home() {
                   href="https://x.com/ya_shtwt"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors"
+                  className="neobrutal-box bg-pastel-yellow w-12 h-12 flex items-center justify-center"
                   title="X (Twitter)"
                 >
                   <svg
-                    className="w-5 h-5 text-white"
+                    className="w-6 h-6 text-black"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -772,11 +750,11 @@ export default function Home() {
                   href="https://www.youtube.com/@yashraj.10"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors"
+                  className="neobrutal-box bg-pastel-pink w-12 h-12 flex items-center justify-center"
                   title="YouTube"
                 >
                   <svg
-                    className="w-5 h-5 text-white"
+                    className="w-6 h-6 text-black"
                     fill="currentColor"
                     viewBox="0 0 24 24"
                   >
@@ -787,8 +765,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-white/20 pt-8 text-center">
-            <p className="text-white/60 text-sm">
+          <div className="border-t-4 border-black pt-8 text-center">
+            <p className="text-black/80 text-sm font-black">
               © 2025 DeCollab. Built with ❤️ by Ya.sh
             </p>
           </div>
@@ -798,43 +776,41 @@ export default function Home() {
       {/* Enhanced Join Session Modal */}
       {showJoinModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 max-w-md w-full border border-white/20 shadow-2xl">
+          <div className="neobrutal-box bg-pastel-yellow p-8 max-w-md w-full">
             <div className="text-center mb-6">
               <div
-                className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center shadow-lg ${
-                  joinType === "excalidraw"
-                    ? "bg-gradient-to-br from-purple-500 to-pink-500"
-                    : "bg-gradient-to-br from-blue-500 to-teal-500"
-                }`}
+                className={`w-20 h-20 mx-auto mb-4 border-4 border-black flex items-center justify-center ${joinType === "excalidraw"
+                  ? "bg-pastel-pink"
+                  : "bg-pastel-blue"
+                  }`}
               >
                 <svg
-                  className="w-8 h-8 text-white"
+                  className="w-10 h-10 text-black"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  strokeWidth={3}
                 >
                   {joinType === "excalidraw" ? (
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
                     />
                   ) : (
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                     />
                   )}
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">
+              <h3 className="text-3xl font-black text-black uppercase mb-2">
                 Join {joinType === "excalidraw" ? "ExcaliDraw" : "Doc Online"}{" "}
                 Session
               </h3>
-              <p className="text-white/80">
+              <p className="text-black/90 font-bold">
                 Enter the session ID to join an existing collaborative session.
               </p>
             </div>
@@ -843,26 +819,25 @@ export default function Home() {
               value={joinSessionId}
               onChange={(e) => setJoinSessionId(e.target.value)}
               placeholder="Enter session ID..."
-              className="w-full px-4 py-4 bg-white/10 backdrop-blur-sm border border-white/30 rounded-2xl focus:ring-2 focus:ring-purple-400 focus:border-transparent outline-none mb-6 text-white placeholder-white/60 text-center font-mono"
+              className="w-full px-4 py-4 neobrutal-box bg-white border-4 border-black outline-none mb-6 text-black placeholder-black/60 text-center font-mono font-black"
               onKeyPress={(e) => e.key === "Enter" && joinSession()}
             />
             <div className="flex gap-3">
               <button
                 onClick={() => setShowJoinModal(false)}
-                className="flex-1 px-6 py-3 bg-white/10 border border-white/30 text-white rounded-2xl hover:bg-white/20 transition-all duration-200 font-medium backdrop-blur-sm"
+                className="flex-1 neobrutal-button bg-pastel-orange px-6 py-3 text-black font-black uppercase"
               >
                 Cancel
               </button>
               <button
                 onClick={joinSession}
                 disabled={!joinSessionId.trim()}
-                className={`flex-1 px-6 py-3 rounded-2xl font-semibold transition-all duration-200 ${
-                  joinSessionId.trim()
-                    ? joinType === "excalidraw"
-                      ? "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg"
-                      : "bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white shadow-lg"
-                    : "bg-white/10 text-white/50 cursor-not-allowed"
-                }`}
+                className={`flex-1 neobrutal-button px-6 py-3 text-black font-black uppercase ${joinSessionId.trim()
+                  ? joinType === "excalidraw"
+                    ? "bg-pastel-pink"
+                    : "bg-pastel-mint"
+                  : "bg-pastel-yellow opacity-50 cursor-not-allowed"
+                  }`}
               >
                 Join Session
               </button>

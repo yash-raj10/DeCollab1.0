@@ -50,8 +50,7 @@ export async function uploadToIPFS(
   } catch (error) {
     console.error("Supabase storage failed:", error);
     throw new Error(
-      `Failed to store content: ${
-        error instanceof Error ? error.message : "Unknown error"
+      `Failed to store content: ${error instanceof Error ? error.message : "Unknown error"
       }`
     );
   }
@@ -89,8 +88,7 @@ export async function getFromIPFS(documentId: string): Promise<string> {
   } catch (error) {
     console.error("Supabase retrieval failed:", error);
     throw new Error(
-      `Failed to retrieve content: ${
-        error instanceof Error ? error.message : "Unknown error"
+      `Failed to retrieve content: ${error instanceof Error ? error.message : "Unknown error"
       }`
     );
   }
