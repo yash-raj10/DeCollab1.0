@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+:root {
+  /* Neobrutalism Pastel Color Palette */
+  --pastel-pink: #FFB6C1;
+  --pastel-blue: #B6E5D8;
+  --pastel-yellow: #FFE5B4;
+  --pastel-purple: #E5D4ED;
+  --pastel-green: #C8E6C9;
+  --pastel-orange: #FFD4A3;
+  --pastel-lavender: #D4C5E8;
+  --pastel-mint: #B2F5EA;
+  
+  /* Dark borders for neobrutalism */
+  --border-black: #1a1a1a;
+  --border-thick: 4px;
+  --shadow-offset: 8px;
+  
+  /* Background */
+  --background: #FFF8F0;
+  --foreground: #1a1a1a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 600;
+}
+
+/* Neobrutalism Utility Classes */
+.neobrutal-box {
+  border: var(--border-thick) solid var(--border-black);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--border-black);
+  background: white;
+  transition: all 0.1s ease;
+}
+
+.neobrutal-box:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0px 0px var(--border-black);
+}
+
+.neobrutal-box:active {
+  transform: translate(var(--shadow-offset), var(--shadow-offset));
+  box-shadow: 0px 0px 0px 0px var(--border-black);
+}
+
+.neobrutal-button {
+  border: var(--border-thick) solid var(--border-black);
+  box-shadow: var(--shadow-offset) var(--shadow-offset) 0px 0px var(--border-black);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.1s ease;
+  cursor: pointer;
+}
+
+.neobrutal-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0px 0px var(--border-black);
+}
+
+.neobrutal-button:active {
+  transform: translate(var(--shadow-offset), var(--shadow-offset));
+  box-shadow: 0px 0px 0px 0px var(--border-black);
+}
+
+/* Pastel color backgrounds */
+.bg-pastel-pink { background-color: var(--pastel-pink); }
+.bg-pastel-blue { background-color: var(--pastel-blue); }
+.bg-pastel-yellow { background-color: var(--pastel-yellow); }
+.bg-pastel-purple { background-color: var(--pastel-purple); }
+.bg-pastel-green { background-color: var(--pastel-green); }
+.bg-pastel-orange { background-color: var(--pastel-orange); }
+.bg-pastel-lavender { background-color: var(--pastel-lavender); }
+.bg-pastel-mint { background-color: var(--pastel-mint); }
