@@ -1,0 +1,33 @@
+{
+  "name": "collabify-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for Collabify document storage on Mantle L2",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:mantle": "hardhat run scripts/deploy.js --network MantleMainnet",
+    "deploy:mantle-sepolia": "hardhat run scripts/deploy.js --network MantleTestnet",
+    "verify": "hardhat verify --network MantleMainnet",
+    "clean": "hardhat clean"
+  },
+  "keywords": [
+    "ethereum",
+    "solidity",
+    "mantle",
+    "l2",
+    "ipfs",
+    "documents"
+  ],
+  "author": "Collabify Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^5.0.0",
+    "hardhat": "^2.19.0",
+    "dotenv": "^16.3.1"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}
