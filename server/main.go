@@ -15,7 +15,7 @@ func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		origin := c.Request.Header.Get("Origin")
 		allowedOrigins := []string{
-			"https://de-collab1-0.vercel.app"
+			"https://de-collab1-0.vercel.app",
 			"http://localhost:3000",
 		}
 		
